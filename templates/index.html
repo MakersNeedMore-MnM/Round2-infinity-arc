@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adaptive Tutor — Python Functions</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">rebuild<span>/</span>classroom<span>::</span>adaptive-tutor</div>
+      <div class="subject">teaching one subject, deeply: <strong>Python functions</strong></div>
+    </header>
+
+    <div class="layout">
+      <main id="teaching-panel" class="card" aria-live="polite">
+        <div class="loading">Booting the tutor</div>
+      </main>
+
+      <aside class="graph-panel">
+        <div class="graph-title">learning path</div>
+        <div id="graph" class="graph">
+          <div class="graph-empty">No commits yet — this fills in as the tutor decides how to teach you.</div>
+        </div>
+
+        <div class="graph-title">mastery estimate</div>
+        <div id="mastery" class="mastery"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

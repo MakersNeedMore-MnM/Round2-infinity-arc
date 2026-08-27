@@ -7,8 +7,8 @@ const CONCEPT_LABELS = {
 };
 
 const state = {
-  history: [],       // array of turn objects returned by the server
-  current: null,     // the turn currently on screen
+  history: [],       
+  current: null,     
   selectedOption: null,
   submitting: false,
 };
@@ -24,7 +24,7 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
-// Minimal renderer: turns ```python ... ``` fences into <pre><code>, rest into <p> blocks.
+
 function renderExplanation(text) {
   if (!text) return "";
   const parts = text.split(/```(?:python)?\n?([\s\S]*?)```/g);

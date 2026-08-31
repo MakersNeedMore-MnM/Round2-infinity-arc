@@ -11,6 +11,10 @@ Built for **Rebuild the Classroom**, hosted by LV8 Tech.
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-prototype-orange)
 
+### 🔗 [**Try it live →**](https://adaptive-tutor-1gyq.onrender.com)
+
+*(Hosted on Render's free tier — the first request after inactivity can take 30–50 seconds to wake the server up. That's expected, not a bug.)*
+
 </div>
 
 ---

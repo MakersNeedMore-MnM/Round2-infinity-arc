@@ -1,27 +1,3 @@
-tutor_engine.py
-
-This is the part of the submission that carries the educational reasoning.
-
-Design decision: the model is NOT given a fixed lesson script. On every turn
-it receives the full interaction history (what it taught, what it asked, what
-the student answered) and must decide ONE of four moves before saying anything:
-
-    slow_down   — same concept, smaller step, more scaffolding
-    reframe     — same concept, different mental model / analogy
-    jump_ahead  — concept is landing, raise difficulty or move on
-    probe       — answer is ambiguous, ask a targeted follow-up before teaching more
-
-The model must justify the move (diagnosis) before it teaches. That forces the
-"why does this help a student learn" answer to live in the transcript itself,
-not just in our README.
-
-The single subject, on purpose, is Python functions: definition, parameters vs
-arguments, return values, and scope — a small area with well-known, well-shaped
-misconceptions (return vs print; mutating vs reassigning; default-argument
-gotchas), which is exactly the kind of terrain where "reads how the student is
-responding and changes course" has room to show up in one sitting.
-"""
-
 import json
 import os
 import re
@@ -55,7 +31,7 @@ CONCEPTS = ["definition", "parameters", "return_values", "scope", "default_args"
 
 SYSTEM_PROMPT = f"""You are the reasoning engine behind an adaptive one-on-one
 programming tutor. You teach exactly ONE topic in this session: Python functions
-— what a function is, parameters vs arguments, return values (vs print), variable
+- what a function is, parameters vs arguments, return values (vs print), variable
 scope, and (only once the basics are solid) the mutable-default-argument gotcha.
 
 You do not follow a fixed slide order. On every turn you look at the FULL
@@ -68,18 +44,18 @@ what the student actually answered) and you decide the single best next move:
 - "reframe": the student's answer reveals a specific misconception (e.g.
   confusing return with print, thinking a function call permanently changes a
   variable, etc). Explain the SAME concept again but with a genuinely different
-  mental model/analogy than you used last time — not just reworded.
+  mental model/analogy than you used last time - not just reworded.
 - "jump_ahead": the student clearly has it. Move to the next concept in the
   sequence {CONCEPTS}, and/or raise the difficulty of the example.
 - "probe": the student's answer is too short or ambiguous to diagnose (e.g.
-  "yes", "I think so", a guess with no reasoning). Do not teach yet — ask one
+  "yes", "I think so", a guess with no reasoning). Do not teach yet - ask one
   sharp follow-up question that would reveal which misconception, if any, is
   present. Set "explanation" to an empty string on this move.
 
 Rules:
 - Stay on ONE concept per teaching beat until it is either understood or you
   explicitly move via jump_ahead. Never introduce two new ideas in one turn.
-- Every question must be answerable from what you just explained — no pop quiz
+- Every question must be answerable from what you just explained - no pop quiz
   questions on things you have not taught yet.
 - Alternate concrete code examples with plain-English explanation. Every
   "explanation" should include a short Python code snippet in a fenced block.
@@ -101,13 +77,13 @@ Respond with ONLY a single JSON object. No markdown fences, no commentary
 before or after. The JSON object must have exactly these keys:
 
 {{
-  "diagnosis": string,          // one sentence: your read of the student's last answer, or "start"
+  "diagnosis": string,
   "action": "slow_down" | "reframe" | "jump_ahead" | "probe",
   "concept_tag": one of {CONCEPTS},
-  "explanation": string,        // teaching content for this turn, may include a ```python fenced block, "" if action is "probe"
-  "question": string,           // the question you're asking now, "" if done is true
+  "explanation": string,
+  "question": string,
   "question_type": "mcq" | "short_answer",
-  "options": array of strings or null,  // required (2-4 items) if question_type is "mcq", else null
+  "options": array of strings or null,
   "mastery_estimate": {{"definition": number, "parameters": number, "return_values": number, "scope": number, "default_args": number}},
   "done": boolean
 }}
@@ -119,11 +95,8 @@ class TutorEngineError(Exception):
 
 
 def _serialize_history(history):
-    """Turn the client-side history array into a plain-text transcript the
-    model can reason over. Each entry already has the shape we returned to the
-    client on a previous turn, plus the student's answer once they respond."""
     if not history:
-        return "(no turns yet — this is the first turn)"
+        return "(no turns yet - this is the first turn)"
 
     lines = []
     for i, turn in enumerate(history, start=1):
@@ -142,8 +115,6 @@ def _serialize_history(history):
 
 
 def _extract_json(text):
-    """The model is instructed to return raw JSON, but strip fences defensively
-    in case it wraps the object anyway."""
     cleaned = text.strip()
     cleaned = re.sub(r"^```(json)?", "", cleaned.strip())
     cleaned = re.sub(r"```$", "", cleaned.strip())
@@ -289,7 +260,6 @@ def get_next_turn(history, student_answer):
             "or ANTHROPIC_API_KEY (Claude)."
         )
 
-   
     history = list(history)
     if history and student_answer is not None:
         history[-1] = {**history[-1], "student_answer": student_answer}

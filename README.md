@@ -50,6 +50,11 @@ The sidebar renders your session as a **commit graph** — one node per turn, co
 - [License](#license)
 
 ---
+## Tech Stack
+* **Backend:** Python, Flask, Gunicorn, Urllib
+* **AI Integration:** Groq API, xAI API, Anthropic API
+* **Frontend:** HTML5, CSS3, JavaScript (Custom dark-themed terminal UI)
+* **Deployment & Version Control:** Render, Git, GitHub
 
 ## Quickstart
 

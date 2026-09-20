@@ -141,8 +141,8 @@ flowchart LR
 
 ---
 ## Screenshots
-<img width="512" height="217" alt="image" src="https://github.com/user-attachments/assets/32ab8f1b-c034-4248-bd80-d658cb8184bd" />
-<img width="512" height="313" alt="image" src="https://github.com/user-attachments/assets/a8a39ecd-9dcd-489b-974d-affc67213618" />
+<img width="512" height="217" alt="image" src="https://github.com/user-attachments/assets/32ab8f1b-c034-4248-bd80-d658cb8184bd" /> <img width="512" height="313" alt="image" src="https://github.com/user-attachments/assets/28ac00e6-6ffa-4179-9352-266cf633a101" />
+
 
 
 ## Project structure

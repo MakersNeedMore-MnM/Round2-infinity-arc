@@ -2,71 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adaptive Tutor — Python Functions</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>rebuild/classroom::adaptive-tutor</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .title {
+            color: #ff7b72;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .subtitle {
+            color: #8b949e;
+            font-size: 14px;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            background: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 10px;
+            resize: vertical;
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+        button {
+            background: #238636;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        button:hover { opacity: 0.9; }
+        .btn-secondary {
+            background: #30363d;
+        }
+        #summaryModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            width: 400px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <div class="logo">rebuild/classroom::adaptive-tutor</div>
-            <div class="subtitle">teaching one subject, deeply: <strong>Python functions</strong></div>
-        </header>
 
-        <main class="content-grid">
-            <section class="tutor-panel">
-                <div id="tutor-content">
-                    <div class="move-badge slow_down">Booting the tutor</div>
-                    <div class="explanation-text">Loading initial assessment...</div>
-                </div>
-                <form id="answer-form">
-                    <textarea id="user-answer" placeholder="Type your answer..." required></textarea>
-                    <button type="submit" id="submit-btn">Answer</button>
-                </form>
-            </section>
-
-            <aside class="sidebar">
-                <div class="sidebar-section">
-                    <h3>learning path</h3>
-                    <div id="learning-path">
-                        <div class="commit-node slow_down">
-                            <span class="node-dot"></span>
-                            <div class="node-info">
-                                <strong>definition</strong>
-                                <span class="node-move">slow down</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sidebar-section">
-                    <h3>mastery estimate</h3>
-                    <div class="mastery-list">
-                        <div class="mastery-item">
-                            <span>definition</span>
-                            <div class="progress-bar"><div class="fill" id="mastery-definition" style="width: 10%;"></div></div>
-                        </div>
-                        <div class="mastery-item">
-                            <span>parameters</span>
-                            <div class="progress-bar"><div class="fill" id="mastery-parameters" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="mastery-item">
-                            <span>return values</span>
-                            <div class="progress-bar"><div class="fill" id="mastery-return-values" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="mastery-item">
-                            <span>scope</span>
-                            <div class="progress-bar"><div class="fill" id="mastery-scope" style="width: 0%;"></div></div>
-                        </div>
-                        <div class="mastery-item">
-                            <span>default args</span>
-                            <div class="progress-bar"><div class="fill" id="mastery-default-args" style="width: 0%;"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </main>
+<header>
+    <div>
+        <span class="title">rebuild/classroom::adaptive-tutor</span>
     </div>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <span class="subtitle">Python functions</span>
+        <div>
+            <label style="font-size: 12px; color: #8b949e; margin-right: 5px;">Provider:</label>
+            <select id="providerSelect" style="background: #161b22; color: #fff; border: 1px solid #30363d; padding: 4px; border-radius: 4px; font-family: monospace;">
+                <option value="groq">Groq</option>
+                <option value="xai">xAI</option>
+                <option value="anthropic">Claude</option>
+            </select>
+        </div>
+    </div>
+</header>
+
+<div class="main-layout">
+    <div class="card">
+        <div id="tutorOutput" style="min-height: 150px; margin-bottom: 15px; white-space: pre-wrap;">Loading initial assessment...</div>
+        <textarea id="studentAnswerInput" rows="3" placeholder="Type your answer..."></textarea>
+        <div style="margin-top: 10px; display: flex; gap: 10px;">
+            <button id="submitBtn">Answer</button>
+            <button id="hintBtn" class="btn-secondary">Need a Hint?</button>
+        </div>
+    </div>
+    <div class="card">
+        <h3>mastery estimate</h3>
+        <div id="masteryContainer">
+            <p>definition</p>
+            <div style="background: #30363d; height: 6px; border-radius: 3px; margin-bottom: 10px;"><div id="bar-definition" style="background: #58a6ff; width: 0%; height: 100%; border-radius: 3px;"></div></div>
+            <p>parameters</p>
+            <div style="background: #30363d; height: 6px; border-radius: 3px; margin-bottom: 10px;"><div id="bar-parameters" style="background: #58a6ff; width: 0%; height: 100%; border-radius: 3px;"></div></div>
+            <p>return values</p>
+            <div style="background: #30363d; height: 6px; border-radius: 3px; margin-bottom: 10px;"><div id="bar-return_values" style="background: #58a6ff; width: 0%; height: 100%; border-radius: 3px;"></div></div>
+            <p>scope</p>
+            <div style="background: #30363d; height: 6px; border-radius: 3px; margin-bottom: 10px;"><div id="bar-scope" style="background: #58a6ff; width: 0%; height: 100%; border-radius: 3px;"></div></div>
+            <p>default args</p>
+            <div style="background: #30363d; height: 6px; border-radius: 3px; margin-bottom: 10px;"><div id="bar-default_args" style="background: #58a6ff; width: 0%; height: 100%; border-radius: 3px;"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Session Summary Modal -->
+<div id="summaryModal">
+    <div class="modal-content">
+        <h2>🎉 Session Complete!</h2>
+        <p>You've mastered Python functions. Here is your final skill breakdown:</p>
+        <div id="modalScores" style="text-align: left; margin: 20px 0;"></div>
+        <button onclick="document.getElementById('summaryModal').style.display='none'">Close & Celebrate</button>
+    </div>
+</div>
+
+<script>
+    let history = [];
+
+    async function fetchTurn(studentAnswer = null) {
+        const provider = document.getElementById('providerSelect').value;
+        try {
+            const response = await fetch('/api/turn', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ history, student_answer: studentAnswer, provider })
+            });
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('tutorOutput').innerText = "Error: " + data.message;
+                return;
+            }
+
+            history.push(data);
+
+            let htmlContent = "";
+            if (data.explanation) htmlContent += data.explanation + "\n\n";
+            if (data.question) htmlContent += "<strong>Question:</strong> " + data.question;
+            document.getElementById('tutorOutput').innerHTML = htmlContent;
+
+            if (data.mastery_estimate) {
+                for (let [concept, score] of Object.entries(data.mastery_estimate)) {
+                    let bar = document.getElementById('bar-' + concept);
+                    if (bar) bar.style.width = Math.round(score * 100) + '%';
+                }
+            }
+
+            if (data.done) {
+                let scoresHtml = '';
+                for (let [concept, score] of Object.entries(data.mastery_estimate)) {
+                    scoresHtml += `<p style="margin: 8px 0;"><strong>${concept}:</strong> ${Math.round(score * 100)}%</p>`;
+                }
+                document.getElementById('modalScores').innerHTML = scoresHtml;
+                document.getElementById('summaryModal').style.display = 'flex';
+            }
+
+        } catch (err) {
+            document.getElementById('tutorOutput').innerText = "Network error connecting to tutor backend.";
+        }
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => {
+        const input = document.getElementById('studentAnswerInput');
+        const val = input.value.trim();
+        if (!val) return;
+        input.value = '';
+        document.getElementById('tutorOutput').innerText = "Thinking...";
+        fetchTurn(val);
+    });
+
+    document.getElementById('hintBtn').addEventListener('click', () => {
+        const input = document.getElementById('studentAnswerInput');
+        input.value = "I am stuck, can you give me a hint?";
+        document.getElementById('submitBtn').click();
+    });
+
+    fetchTurn();
+</script>
 </body>
 </html>

@@ -1,55 +1,133 @@
-/* --- Clickable Commit Nodes & Learning Path Styling --- */
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: monospace;
+    margin: 0;
+    padding: 20px;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #f0883e;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.tutor-panel, .sidebar-section {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.move-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.move-badge.slow_down { background: #1f6feb; color: #ffffff; }
+.move-badge.reframe { background: #da3633; color: #ffffff; }
+.move-badge.jump_ahead { background: #9e6a03; color: #ffffff; }
+
+pre, code {
+    background: #0d1117;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    color: #58a6ff;
+    overflow-x: auto;
+}
+
+textarea {
+    width: 100%;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 15px;
+    resize: vertical;
+    font-family: monospace;
+}
+
+button#submit-btn {
+    background: #238636;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button#submit-btn:hover {
+    background: #2ea043;
+}
+
 .commit-node {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: #1a1e24;
-    border: 1px solid #2a323d;
-    padding: 10px 14px;
+    gap: 10px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    padding: 10px;
     border-radius: 6px;
-    margin-bottom: 10px;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.commit-node:hover {
-    background: #222831;
-    border-color: #f39c12;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-bottom: 8px;
 }
 
 .node-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #7f8c8d;
-    flex-shrink: 0;
+    background: #58a6ff;
 }
 
-.commit-node.slow_down .node-dot { background: #3498db; }
-.commit-node.reframe .node-dot { background: #e74c3c; }
-.commit-node.jump_ahead .node-dot { background: #f1c40f; }
-.commit-node.probe .node-dot { background: #95a5a6; }
-
-.node-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.progress-bar {
+    background: #30363d;
+    border-radius: 4px;
+    height: 6px;
+    width: 100%;
+    margin-top: 6px;
     overflow: hidden;
 }
 
-.node-info strong {
-    color: #ecf0f1;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.fill {
+    background: #58a6ff;
+    height: 100%;
 }
 
-.node-move {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #95a5a6;
-    letter-spacing: 0.5px;
+.mastery-item {
+    margin-bottom: 12px;
+    font-size: 0.85rem;
 }

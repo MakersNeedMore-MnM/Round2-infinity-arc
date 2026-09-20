@@ -13,6 +13,10 @@ def turn():
     payload = request.get_json(force=True, silent=True) or {}
     history = payload.get("history", [])
     student_answer = payload.get("student_answer")
+    
+    selected_provider = payload.get("provider")
+    if selected_provider in ("groq", "xai", "anthropic"):
+        os.environ["PROVIDER"] = selected_provider
 
     if not (os.environ.get("GROQ_API_KEY") or os.environ.get("XAI_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")):
         return jsonify({
